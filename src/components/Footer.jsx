@@ -8,6 +8,7 @@ const Footer = () => {
   return (
     <footer className="bg-mutedBlue text-white text-center px-4 py-2 flex items-center justify-between">
       <div className="flex items-center gap-4">
+        {/* operating system icons */}
         <span className="text-3xl text-[#adbcda]">
           <FaApple />
         </span>
@@ -18,6 +19,7 @@ const Footer = () => {
           <DiWindows />
         </span>
 
+        {/* light and dark mode button */}
         <div className="border border-[#777] rounded-md px-[3px]">
           <button className="rounded px-2 py-1 uppercase hover:bg-white hover:text-mutedBlue text-xs">
             Light
@@ -26,6 +28,8 @@ const Footer = () => {
             Dark
           </button>
         </div>
+
+        {/* language selection */}
         <div className="border-l border-l-white">
           <div className="flex items-center cursor-pointer ml-2 px-5 py-2.5 gap-2 rounded-md hover:bg-white hover:text-mutedBlue">
             <div className="w-6 h-4 rounded-md">
@@ -43,6 +47,7 @@ const Footer = () => {
         </div>
       </div>
 
+      {/* go back to demos button */}
       <a className="border border-white rounded-full text-sm uppercase font-semibold px-3 py-1.5  cursor-pointer hover:bg-white hover:text-mutedBlue">
         Go back to demos
       </a>
