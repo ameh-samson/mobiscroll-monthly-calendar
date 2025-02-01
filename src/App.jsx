@@ -1,13 +1,10 @@
-import { useGlobalContext } from "@/hooks/useGlobalContext";
 import Layout from "@/layout/Layout";
+import Calendar from "./components/calender/Calender";
 
 function App() {
-  const { data } = useGlobalContext();
-  console.log(data);
-
   return (
     <Layout>
-      <h2 className="text-red-600">Hello</h2>;
+      <Calendar />
     </Layout>
   );
 }

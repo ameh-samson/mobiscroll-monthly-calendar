@@ -2,7 +2,7 @@ import { PiLessThanBold, PiGreaterThanBold } from "react-icons/pi";
 
 const Header = () => {
   return (
-    <header className="sticky bg-lightGray text-blue flex justify-between items-center p-4">
+    <header className="flex justify-between items-center p-4">
       {/* month and year  */}
       <h1 className="text-2xl">February 2025</h1>
 

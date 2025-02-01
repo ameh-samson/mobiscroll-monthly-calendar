@@ -1,10 +1,11 @@
+import PropTypes from "prop-types";
 import { FaApple } from "react-icons/fa";
 import { BsAndroid2 } from "react-icons/bs";
 import { DiWindows } from "react-icons/di";
 import { IoMdArrowDropdown } from "react-icons/io";
 import usaflag from "@/assets/png/usa-flag.png";
 
-const Footer = () => {
+const Footer = ({ toggleDarkTheme, toggleLightTheme, theme }) => {
   return (
     <footer className="bg-mutedBlue text-white text-center px-4 py-2 flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -21,10 +22,20 @@ const Footer = () => {
 
         {/* light and dark mode button */}
         <div className="border border-[#777] rounded-md px-[3px]">
-          <button className="rounded px-2 py-1 uppercase hover:bg-white hover:text-mutedBlue text-xs">
+          <button
+            className={`rounded px-2 py-1 uppercase text-xs ${
+              theme === "light" ? "bg-white text-mutedBlue" : ""
+            }`}
+            onClick={toggleLightTheme}
+          >
             Light
           </button>
-          <button className="rounded px-2 py-1 uppercase hover:bg-white hover:text-mutedBlue text-xs">
+          <button
+            className={`rounded px-2 py-1 uppercase ${
+              theme === "dark" ? "bg-white text-mutedBlue" : ""
+            }`}
+            onClick={toggleDarkTheme}
+          >
             Dark
           </button>
         </div>
@@ -53,6 +64,12 @@ const Footer = () => {
       </a>
     </footer>
   );
+};
+
+Footer.propTypes = {
+  toggleDarkTheme: PropTypes.func.isRequired,
+  toggleLightTheme: PropTypes.func.isRequired,
+  theme: PropTypes.node.isRequired,
 };
 
 export default Footer;
