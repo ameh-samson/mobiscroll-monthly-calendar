@@ -21,7 +21,7 @@ const Footer = ({ toggleDarkTheme, toggleLightTheme, theme }) => {
         </span>
 
         {/* light and dark mode button */}
-        <div className="border border-[#777] rounded-md px-[3px]">
+        <div className="border border-[#777] rounded-md px-[3px] py-1">
           <button
             className={`rounded px-2 py-1 uppercase text-xs ${
               theme === "light" ? "bg-white text-mutedBlue" : ""
@@ -31,7 +31,7 @@ const Footer = ({ toggleDarkTheme, toggleLightTheme, theme }) => {
             Light
           </button>
           <button
-            className={`rounded px-2 py-1 uppercase ${
+            className={`rounded px-2 py-1 uppercase text-xs ${
               theme === "dark" ? "bg-white text-mutedBlue" : ""
             }`}
             onClick={toggleDarkTheme}

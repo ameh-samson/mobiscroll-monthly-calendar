@@ -1,10 +1,15 @@
-import PropTypes from "prop-types";
+import { useState } from "react";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import useTheme from "@/hooks/useTheme";
+import Calendar from "@/components/calender/Calender";
 
-const Layout = ({ children }) => {
+const Layout = () => {
   const [theme, toggleLightTheme, toggleDarkTheme] = useTheme();
+
+  const today = new Date();
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const [currentYear, setCurrentYear] = useState(today.getFullYear());
 
   return (
     <div className="flex flex-col h-screen">
@@ -17,7 +22,12 @@ const Layout = ({ children }) => {
             : ""
         }`}
       >
-        <Header />
+        <Header
+          currentMonth={currentMonth}
+          currentYear={currentYear}
+          setCurrentMonth={setCurrentMonth}
+          setCurrentYear={setCurrentYear}
+        />
       </div>
 
       <main
@@ -25,7 +35,11 @@ const Layout = ({ children }) => {
           theme === "dark" ? "bg-black text-white" : ""
         }`}
       >
-        {children}
+        <Calendar
+          currentMonth={currentMonth}
+          currentYear={currentYear}
+          theme={theme}
+        />
       </main>
 
       <div className="flex-shrink-0">
@@ -37,10 +51,6 @@ const Layout = ({ children }) => {
       </div>
     </div>
   );
-};
-
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
 };
 
 export default Layout;

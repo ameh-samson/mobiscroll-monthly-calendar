@@ -9,3 +9,21 @@ body {
   font-family: "Roboto", sans-serif;
   font-size: 14px;
 }
+
+/* Customize the entire scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/* Scrollbar Track */
+::-webkit-scrollbar-track {
+  background: none;
+  border-radius: 10px;
+}
+
+/* Scrollbar Handle (Thumb) */
+::-webkit-scrollbar-thumb {
+  background: #707876;
+  border-radius: 10px;
+}
