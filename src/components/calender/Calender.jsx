@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { CiCirclePlus } from "react-icons/ci";
 
 const Calendar = ({ currentMonth, currentYear, theme }) => {
   const [resources, setResources] = useState([]);
@@ -39,18 +38,18 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
 
   return (
     <div className="p-4">
-      <table className="border-collapse w-full">
+      <table className="border-collapse">
         {/* Table Header */}
         <thead>
           <tr>
             {/* Fixed Resources Column */}
             <th
-              className={`sticky left-0 top-0 z-20 p-2 border  ${
+              className={`sticky left-0 top-0 z-20 p-2 border font-normal text-start  ${
                 theme === "dark"
                   ? "bg-black border-[#333333] text-white"
                   : "border-gray-300 bg-white"
               }`}
-              style={{ minWidth: "200px", maxWidth: "200px" }} 
+              style={{ minWidth: "200px", maxWidth: "200px" }}
             >
               Resources
             </th>
@@ -59,12 +58,12 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
               return (
                 <th
                   key={index}
-                  className={`sticky top-0 z-10 border p-2 text-center ${
+                  className={`sticky top-0 z-10 border p-2 text-center font-normal ${
                     theme === "dark"
                       ? "bg-black text-white border-[#333333]"
                       : "bg-white border-gray-300"
                   }`}
-                  style={{ minWidth: "150px" }} 
+                  style={{ minWidth: "150px" }}
                 >
                   {date.toLocaleDateString("en-US", {
                     weekday: "short",
@@ -87,7 +86,7 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
                     ? "bg-black text-white border-[#333333]"
                     : "bg-white border-gray-300"
                 }`}
-                style={{ minWidth: "200px", maxWidth: "200px" }} 
+                style={{ minWidth: "200px", maxWidth: "200px" }}
               >
                 {resource}
               </td>
@@ -97,7 +96,7 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
                   className={`h-16 border ${
                     theme === "dark" ? "border-[#333333]" : "border-gray-300"
                   }`}
-                  style={{ minWidth: "150px" }} 
+                  style={{ minWidth: "150px" }}
                 ></td>
               ))}
             </tr>
@@ -108,11 +107,11 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
       {/* Add Resource Button */}
       <button
         onClick={addResource}
-        className={`mt-4 p-2 bg-blue-500 rounded text-3xl ${
+        className={`mt-4 p-2 bg-blue-500 rounded-md border text-xs sticky left-0 ${
           theme === "dark" ? "text-white" : "text-black"
         }`}
       >
-        <CiCirclePlus />
+        Add more resources
       </button>
     </div>
   );
