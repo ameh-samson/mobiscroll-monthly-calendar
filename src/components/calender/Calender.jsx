@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import { CiCirclePlus } from "react-icons/ci";
 
 const Calendar = ({ currentMonth, currentYear, theme }) => {
   const [resources, setResources] = useState([]);
@@ -19,12 +20,25 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
     }
   }, [resources]);
 
+  const getResourceName = (count) => {
+    let name = "";
+    let index = count;
+
+    // Convert index to letters (A-Z, then AA, AB, AC...)
+    while (index >= 0) {
+      name = String.fromCharCode((index % 26) + 65) + name; // Convert remainder to a letter
+      index = Math.floor(index / 26) - 1; // Move to the next "digit"
+    }
+
+    return `Resource ${name}`;
+  };
+
   const addResource = () => {
-    const newResource = `Resource ${resources.length + 1}`;
+    const newResource = getResourceName(resources.length);
     const updatedResources = [...resources, newResource];
 
     setResources(updatedResources);
-    localStorage.setItem("resources", JSON.stringify(updatedResources)); // Save immediately
+    localStorage.setItem("resources", JSON.stringify(updatedResources));
   };
 
   return (
@@ -83,9 +97,11 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
 
       <button
         onClick={addResource}
-        className="mb-4 p-2 bg-blue-500 text-white rounded"
+        className={`mb-4 p-2 bg-blue-500 rounded text-3xl ${
+          theme === "dark" ? "text-white" : "text-black"
+        }`}
       >
-        Add Resource
+        <CiCirclePlus />
       </button>
     </div>
   );
