@@ -6,10 +6,21 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
   const [resources, setResources] = useState([]);
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
+  // Default resources A to O
+  const defaultResources = Array.from(
+    { length: 15 },
+    (_, i) => `Resource ${String.fromCharCode(65 + i)}`
+  );
+
+  // Load resources from local storage or set defaults
   useEffect(() => {
     const storedResources = JSON.parse(localStorage.getItem("resources"));
     if (storedResources) {
       setResources(storedResources);
+    } else {
+      // Set default resources if no resources are found in local storage
+      setResources(defaultResources);
+      localStorage.setItem("resources", JSON.stringify(defaultResources));
     }
   }, []);
 
@@ -19,28 +30,16 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
     }
   }, [resources]);
 
-  const getResourceName = (count) => {
-    let name = "";
-    let index = count;
-    while (index >= 0) {
-      name = String.fromCharCode((index % 26) + 65) + name;
-      index = Math.floor(index / 26) - 1;
-    }
-    return `Resource ${name}`;
-  };
-
   const addResource = () => {
-    const newResource = getResourceName(resources.length);
+    const newResource = `Resource ${String.fromCharCode(
+      65 + resources.length
+    )}`;
     setResources([...resources, newResource]);
-    localStorage.setItem(
-      "resources",
-      JSON.stringify([...resources, newResource])
-    );
   };
 
   return (
     <div className="p-4">
-      <table className="border-collapse">
+      <table className="border-collapse w-full">
         {/* Table Header */}
         <thead>
           <tr>
@@ -51,7 +50,7 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
                   ? "bg-black border-[#333333] text-white"
                   : "border-gray-300 bg-white"
               }`}
-              style={{ minWidth: "200px", maxWidth: "200px" }} // Fixed width for Resources column
+              style={{ minWidth: "200px", maxWidth: "200px" }} 
             >
               Resources
             </th>
@@ -65,7 +64,7 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
                       ? "bg-black text-white border-[#333333]"
                       : "bg-white border-gray-300"
                   }`}
-                  style={{ minWidth: "150px" }} // Fixed width for date headers
+                  style={{ minWidth: "150px" }} 
                 >
                   {date.toLocaleDateString("en-US", {
                     weekday: "short",
@@ -88,7 +87,7 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
                     ? "bg-black text-white border-[#333333]"
                     : "bg-white border-gray-300"
                 }`}
-                style={{ minWidth: "200px", maxWidth: "200px" }} // Fixed width
+                style={{ minWidth: "200px", maxWidth: "200px" }} 
               >
                 {resource}
               </td>
@@ -98,23 +97,23 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
                   className={`h-16 border ${
                     theme === "dark" ? "border-[#333333]" : "border-gray-300"
                   }`}
-                  style={{ minWidth: "150px" }} // Fixed cell width
+                  style={{ minWidth: "150px" }} 
                 ></td>
               ))}
             </tr>
           ))}
         </tbody>
-
-        {/* Add Resource Button */}
-        <button
-          onClick={addResource}
-          className={`mt-4 p-2 bg-blue-500 rounded text-3xl sticky left-0 ${
-            theme === "dark" ? "text-white" : "text-black"
-          }`}
-        >
-          <CiCirclePlus />
-        </button>
       </table>
+
+      {/* Add Resource Button */}
+      <button
+        onClick={addResource}
+        className={`mt-4 p-2 bg-blue-500 rounded text-3xl ${
+          theme === "dark" ? "text-white" : "text-black"
+        }`}
+      >
+        <CiCirclePlus />
+      </button>
     </div>
   );
 };
