@@ -2,7 +2,7 @@ import { useState } from "react";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import useTheme from "@/hooks/useTheme";
-import Calendar from "@/components/calender/Calender";
+import Calendar from "@/components/Calender";
 
 const Layout = () => {
   const [theme, toggleLightTheme, toggleDarkTheme] = useTheme();

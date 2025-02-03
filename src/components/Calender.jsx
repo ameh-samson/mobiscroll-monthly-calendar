@@ -1,12 +1,11 @@
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { useEvents } from "@/hooks/useEvents";
 
 const Calendar = ({ currentMonth, currentYear, theme }) => {
   const [resources, setResources] = useState([]);
-  const [events, setEvents] = useState([]);
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-  // Default resources A to O
   const defaultResources = Array.from(
     { length: 15 },
     (_, i) => `Resource ${String.fromCharCode(65 + i)}`
@@ -20,111 +19,16 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
       setResources(defaultResources);
       localStorage.setItem("resources", JSON.stringify(defaultResources));
     }
-
-    const storedEvents = JSON.parse(localStorage.getItem("events"));
-    if (storedEvents) {
-      setEvents(storedEvents);
-    } else {
-      const generatedEvents = generateDefaultEvents(defaultResources);
-      setEvents(generatedEvents);
-      localStorage.setItem("events", JSON.stringify(generatedEvents));
-    }
   }, []);
 
-  useEffect(() => {
-    if (resources.length > 0) {
-      localStorage.setItem("resources", JSON.stringify(resources));
-    }
-  }, [resources]);
+  const { events, addEvent, changeEventTitle, deleteEvent, moveEvent } =
+    useEvents(defaultResources, currentMonth, currentYear, daysInMonth);
 
   const addResource = () => {
     const newResource = `Resource ${String.fromCharCode(
       65 + resources.length
     )}`;
     setResources((prevResources) => [...prevResources, newResource]);
-  };
-
-  // Function to generate random time range
-  const generateRandomTime = () => {
-    const startHour = Math.floor(Math.random() * 12) + 8; // Random hour between 8 AM and 8 PM
-    const endHour =
-      startHour + Math.floor(Math.random() * (12 - (startHour - 8))); // End hour after start hour
-    const startTime = `${startHour % 12 === 0 ? 12 : startHour % 12} ${
-      startHour < 12 ? "AM" : "PM"
-    }`;
-    const endTime = `${endHour % 12 === 0 ? 12 : endHour % 12} ${
-      endHour < 12 ? "AM" : "PM"
-    }`;
-    return `${startTime} - ${endTime}`;
-  };
-
-  // Function to generate default events
-  const generateDefaultEvents = (resourceList) => {
-    const defaultEvents = [];
-    resourceList.forEach((resource, index) => {
-      const randomDay = Math.floor(Math.random() * daysInMonth) + 1;
-      const randomTime = generateRandomTime(); // Generate random time for the event
-      const newEvent = {
-        resource,
-        date: new Date(
-          currentYear,
-          currentMonth,
-          randomDay
-        ).toLocaleDateString(),
-        title: `Event ${index + 1}`,
-        color: getRandomColor(),
-        time: randomTime, // Store the generated time range
-        id: Date.now() + index,
-      };
-      defaultEvents.push(newEvent);
-    });
-    return defaultEvents;
-  };
-
-  const addEvent = (resource, date, title) => {
-    const randomTime = generateRandomTime(); // Generate random time for the event
-    const newEvent = {
-      resource,
-      date,
-      title, // Use the title from the prompt input
-      color: getRandomColor(),
-      time: randomTime, // Add the random time to the event
-      id: Date.now(),
-    };
-    const updatedEvents = [...events, newEvent];
-    setEvents(updatedEvents);
-    localStorage.setItem("events", JSON.stringify(updatedEvents));
-  };
-
-  const changeEventTitle = (eventId, newTitle) => {
-    const updatedEvents = events.map((ev) =>
-      ev.id === eventId ? { ...ev, title: newTitle } : ev
-    );
-    setEvents(updatedEvents);
-    localStorage.setItem("events", JSON.stringify(updatedEvents));
-  };
-
-  const deleteEvent = (eventId) => {
-    if (window.confirm("Are you sure you want to delete this event?")) {
-      const updatedEvents = events.filter((ev) => ev.id !== eventId);
-      setEvents(updatedEvents);
-      localStorage.setItem("events", JSON.stringify(updatedEvents));
-    }
-  };
-
-  const moveEvent = (eventId, newDate, newResource) => {
-    const updatedEvents = events.map((event) =>
-      event.id.toString() === eventId
-        ? { ...event, date: newDate, resource: newResource } // Change resource and date
-        : event
-    );
-    setEvents(updatedEvents);
-    localStorage.setItem("events", JSON.stringify(updatedEvents));
-  };
-
-  const getRandomColor = () => {
-    const colors = ["#FF5733", "#33FF57", "#5733FF", "#F1C40F", "#9B59B6"];
-    return colors[Math.floor(Math.random() * colors.length)];
   };
 
   return (
@@ -258,7 +162,6 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
         </tbody>
       </table>
 
-      {/* Add Resource Button */}
       <button
         onClick={addResource}
         className={`mt-4 p-2 bg-blue-500 rounded-md border text-xs sticky left-0 ${
