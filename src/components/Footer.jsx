@@ -59,7 +59,11 @@ const Footer = ({ toggleDarkTheme, toggleLightTheme, theme }) => {
       </div>
 
       {/* go back to demos button */}
-      <a className="border border-white rounded-full text-sm uppercase font-semibold px-3 py-1.5  cursor-pointer hover:bg-white hover:text-mutedBlue">
+      <a
+        href="https://demo.mobiscroll.com/timeline/month-view#"
+        target="_blank"
+        className="border border-white rounded-full text-sm uppercase font-semibold px-3 py-1.5  cursor-pointer hover:bg-white hover:text-mutedBlue"
+      >
         Go back to demos
       </a>
     </footer>

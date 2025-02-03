@@ -38,7 +38,7 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
 
   return (
     <div className="p-4">
-      <table className="border-collapse">
+      <table>
         {/* Table Header */}
         <thead>
           <tr>
