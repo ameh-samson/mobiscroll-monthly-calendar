@@ -65,11 +65,11 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
     return defaultEvents;
   };
 
-  const addEvent = (resource, date) => {
+  const addEvent = (resource, date, title) => {
     const newEvent = {
       resource,
       date,
-      title: "New Event",
+      title, // Use the title from the prompt input
       color: getRandomColor(),
       id: Date.now(),
     };
