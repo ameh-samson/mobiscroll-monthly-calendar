@@ -1,19 +1,14 @@
 import PropTypes from "prop-types";
 import { PiLessThanBold, PiGreaterThanBold } from "react-icons/pi";
+import DatePicker from "./DatePicker";
+
 const Header = ({
   currentMonth,
   currentYear,
   setCurrentMonth,
   setCurrentYear,
 }) => {
-  const currentMonthName = new Date(currentYear, currentMonth).toLocaleString(
-    "default",
-    {
-      month: "long",
-    }
-  );
-
-  // Navigate to previous month
+  // Navigate months
   const goToPreviousMonth = () => {
     if (currentMonth === 0) {
       setCurrentYear(currentYear - 1);
@@ -23,7 +18,6 @@ const Header = ({
     }
   };
 
-  // Navigate to next month
   const goToNextMonth = () => {
     if (currentMonth === 11) {
       setCurrentYear(currentYear + 1);
@@ -34,21 +28,22 @@ const Header = ({
   };
 
   return (
-    <header className="flex justify-between items-center p-4">
-      {/* Month and year */}
-      <h1 className="text-2xl">
-        {currentMonthName} {currentYear}
-      </h1>
+    <header className="relative flex justify-between items-center p-4 bg-white">
+      {/* Date Picker Component */}
+      <DatePicker
+        currentMonth={currentMonth}
+        currentYear={currentYear}
+        setCurrentMonth={setCurrentMonth}
+        setCurrentYear={setCurrentYear}
+      />
 
       {/* Navigation */}
-      <div className="flex items-center gap-2 font-medium text-base">
-        <span className="cursor-pointer" onClick={goToPreviousMonth}>
+      <div className="flex items-center gap-4 text-lg">
+        <span className="cursor-pointer p-2" onClick={goToPreviousMonth}>
           <PiLessThanBold />
         </span>
-
         <span>Today</span>
-
-        <span className="cursor-pointer" onClick={goToNextMonth}>
+        <span className="cursor-pointer p-2" onClick={goToNextMonth}>
           <PiGreaterThanBold />
         </span>
       </div>
@@ -57,8 +52,8 @@ const Header = ({
 };
 
 Header.propTypes = {
-  currentMonth: PropTypes.node.isRequired,
-  currentYear: PropTypes.node.isRequired,
+  currentMonth: PropTypes.number.isRequired,
+  currentYear: PropTypes.number.isRequired,
   setCurrentMonth: PropTypes.func.isRequired,
   setCurrentYear: PropTypes.func.isRequired,
 };
