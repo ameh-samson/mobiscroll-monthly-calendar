@@ -44,11 +44,26 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
     setResources((prevResources) => [...prevResources, newResource]);
   };
 
+  // Function to generate random time range
+  const generateRandomTime = () => {
+    const startHour = Math.floor(Math.random() * 12) + 8; // Random hour between 8 AM and 8 PM
+    const endHour =
+      startHour + Math.floor(Math.random() * (12 - (startHour - 8))); // End hour after start hour
+    const startTime = `${startHour % 12 === 0 ? 12 : startHour % 12} ${
+      startHour < 12 ? "AM" : "PM"
+    }`;
+    const endTime = `${endHour % 12 === 0 ? 12 : endHour % 12} ${
+      endHour < 12 ? "AM" : "PM"
+    }`;
+    return `${startTime} - ${endTime}`;
+  };
+
   // Function to generate default events
   const generateDefaultEvents = (resourceList) => {
     const defaultEvents = [];
     resourceList.forEach((resource, index) => {
       const randomDay = Math.floor(Math.random() * daysInMonth) + 1;
+      const randomTime = generateRandomTime(); // Generate random time for the event
       const newEvent = {
         resource,
         date: new Date(
@@ -58,6 +73,7 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
         ).toLocaleDateString(),
         title: `Event ${index + 1}`,
         color: getRandomColor(),
+        time: randomTime, // Store the generated time range
         id: Date.now() + index,
       };
       defaultEvents.push(newEvent);
@@ -66,11 +82,13 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
   };
 
   const addEvent = (resource, date, title) => {
+    const randomTime = generateRandomTime(); // Generate random time for the event
     const newEvent = {
       resource,
       date,
       title, // Use the title from the prompt input
       color: getRandomColor(),
+      time: randomTime, // Add the random time to the event
       id: Date.now(),
     };
     const updatedEvents = [...events, newEvent];
@@ -94,9 +112,11 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
     }
   };
 
-  const moveEvent = (eventId, newDate) => {
+  const moveEvent = (eventId, newDate, newResource) => {
     const updatedEvents = events.map((event) =>
-      event.id.toString() === eventId ? { ...event, date: newDate } : event
+      event.id.toString() === eventId
+        ? { ...event, date: newDate, resource: newResource } // Change resource and date
+        : event
     );
     setEvents(updatedEvents);
     localStorage.setItem("events", JSON.stringify(updatedEvents));
@@ -178,7 +198,9 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={(e) => {
                       const eventId = e.dataTransfer.getData("eventId");
-                      moveEvent(eventId, date);
+                      const targetResource = resource;
+                      const targetDate = date;
+                      moveEvent(eventId, targetDate, targetResource);
                     }}
                   >
                     {events
@@ -195,38 +217,37 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
                           }
                           style={{
                             backgroundColor: event.color,
-                            height: "50px",
-                            margin: "5px",
-                            cursor: "move",
                           }}
-                          className="p-2 rounded-md"
+                          className="p-2 rounded-md h-auto min-h-[50px] m-[5px] flex flex-col justify-between cursor-move"
                         >
                           <h2 className="text-xs font-semibold">
                             {event.title}
                           </h2>
-                          <button
-                            className="text-[10px] mr-4"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const newTitle = prompt(
-                                "Enter new event title:",
-                                event.title
-                              );
-                              if (newTitle)
-                                changeEventTitle(event.id, newTitle);
-                            }}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="text-[10px]"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deleteEvent(event.id);
-                            }}
-                          >
-                            Delete
-                          </button>
+                          <p className="text-[10px]">{event.time}</p>{" "}
+                          {/* Show random time */}
+                          <div className="flex justify-between text-[10px]">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const newTitle = prompt(
+                                  "Enter new event title:",
+                                  event.title
+                                );
+                                if (newTitle)
+                                  changeEventTitle(event.id, newTitle);
+                              }}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deleteEvent(event.id);
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </div>
                       ))}
                   </td>
