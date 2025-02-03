@@ -41,7 +41,7 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
   const generateDefaultEvents = (resourceList) => {
     const defaultEvents = [];
     resourceList.forEach((resource, index) => {
-      const randomDay = Math.floor(Math.random() * daysInMonth) + 1; // Random day in the month
+      const randomDay = Math.floor(Math.random() * daysInMonth) + 1;
       const newEvent = {
         resource,
         date: new Date(
@@ -56,29 +56,6 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
       defaultEvents.push(newEvent);
     });
     return defaultEvents;
-  };
-
-  const addResource = () => {
-    const newResource = `Resource ${String.fromCharCode(
-      65 + resources.length
-    )}`;
-    const updatedResources = [...resources, newResource];
-    setResources(updatedResources);
-    localStorage.setItem("resources", JSON.stringify(updatedResources));
-
-    // Add a default event for the new resource
-    const randomDay = Math.floor(Math.random() * daysInMonth) + 1;
-    const newEvent = {
-      resource: newResource,
-      date: new Date(currentYear, currentMonth, randomDay).toLocaleDateString(),
-      title: `Event ${events.length + 1}`,
-      color: getRandomColor(),
-      id: Date.now(),
-    };
-
-    const updatedEvents = [...events, newEvent];
-    setEvents(updatedEvents);
-    localStorage.setItem("events", JSON.stringify(updatedEvents));
   };
 
   const addEvent = (resource, date) => {
@@ -110,6 +87,14 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
     }
   };
 
+  const moveEvent = (eventId, newDate) => {
+    const updatedEvents = events.map((event) =>
+      event.id.toString() === eventId ? { ...event, date: newDate } : event
+    );
+    setEvents(updatedEvents);
+    localStorage.setItem("events", JSON.stringify(updatedEvents));
+  };
+
   const getRandomColor = () => {
     const colors = ["#FF5733", "#33FF57", "#5733FF", "#F1C40F", "#9B59B6"];
     return colors[Math.floor(Math.random() * colors.length)];
@@ -121,7 +106,7 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
         <thead>
           <tr>
             <th
-              className={`sticky left-0 top-0 z-20 p-2 border font-normal text-start  ${
+              className={`sticky left-0 top-0 z-20 p-2 border font-normal text-start ${
                 theme === "dark"
                   ? "bg-black border-[#333333] text-white"
                   : "border-gray-300 bg-white"
@@ -151,7 +136,6 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
             })}
           </tr>
         </thead>
-
         <tbody>
           {resources.map((resource, rowIndex) => (
             <tr key={rowIndex}>
@@ -166,27 +150,42 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
                 {resource}
               </td>
               {[...Array(daysInMonth)].map((_, colIndex) => {
-                const date = new Date(currentYear, currentMonth, colIndex + 1);
+                const date = new Date(
+                  currentYear,
+                  currentMonth,
+                  colIndex + 1
+                ).toLocaleDateString();
                 return (
                   <td
                     key={`${rowIndex}-${colIndex}`}
                     className={`h-16 border ${
                       theme === "dark" ? "border-[#333333]" : "border-gray-300"
                     }`}
-                    style={{ minWidth: "150px" }}
-                    onClick={() =>
-                      addEvent(resource, date.toLocaleDateString())
-                    }
+                    style={{ minWidth: "150px", cursor: "pointer" }}
+                    onClick={() => {
+                      const title = prompt("Enter event title:", "New Event");
+                      if (title) {
+                        addEvent(resource, date, title);
+                      }
+                    }}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={(e) => {
+                      const eventId = e.dataTransfer.getData("eventId");
+                      moveEvent(eventId, date);
+                    }}
                   >
                     {events
                       .filter(
                         (event) =>
-                          event.resource === resource &&
-                          event.date === date.toLocaleDateString()
+                          event.resource === resource && event.date === date
                       )
-                      .map((event, idx) => (
+                      .map((event) => (
                         <div
-                          key={idx}
+                          key={event.id}
+                          draggable="true"
+                          onDragStart={(e) =>
+                            e.dataTransfer.setData("eventId", event.id)
+                          }
                           style={{
                             backgroundColor: event.color,
                             height: "50px",
@@ -195,35 +194,32 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
                           }}
                           className="p-2 rounded-md"
                         >
-                          <div>
-                            <h2 className="text-xs font-semibold">
-                              {event.title}
-                            </h2>
-
-                            <button
-                              className="text-[10px] mr-4"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                const newTitle = prompt(
-                                  "Enter new event title:",
-                                  event.title
-                                );
-                                if (newTitle)
-                                  changeEventTitle(event.id, newTitle);
-                              }}
-                            >
-                              Edit
-                            </button>
-                            <button
-                              className="text-[10px]"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                deleteEvent(event.id);
-                              }}
-                            >
-                              Delete
-                            </button>
-                          </div>
+                          <h2 className="text-xs font-semibold">
+                            {event.title}
+                          </h2>
+                          <button
+                            className="text-[10px] mr-4"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const newTitle = prompt(
+                                "Enter new event title:",
+                                event.title
+                              );
+                              if (newTitle)
+                                changeEventTitle(event.id, newTitle);
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="text-[10px]"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteEvent(event.id);
+                            }}
+                          >
+                            Delete
+                          </button>
                         </div>
                       ))}
                   </td>
@@ -233,13 +229,6 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
           ))}
         </tbody>
       </table>
-
-      <button
-        onClick={addResource}
-        className="mt-4 p-2 bg-blue-500 rounded-md text-white"
-      >
-        Add more resources
-      </button>
     </div>
   );
 };
