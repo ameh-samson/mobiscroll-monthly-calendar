@@ -37,6 +37,13 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
     }
   }, [resources]);
 
+  const addResource = () => {
+    const newResource = `Resource ${String.fromCharCode(
+      65 + resources.length
+    )}`;
+    setResources((prevResources) => [...prevResources, newResource]);
+  };
+
   // Function to generate default events
   const generateDefaultEvents = (resourceList) => {
     const defaultEvents = [];
@@ -229,6 +236,16 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
           ))}
         </tbody>
       </table>
+
+      {/* Add Resource Button */}
+      <button
+        onClick={addResource}
+        className={`mt-4 p-2 bg-blue-500 rounded-md border text-xs sticky left-0 ${
+          theme === "dark" ? "text-white" : "text-black"
+        }`}
+      >
+        Add more resources
+      </button>
     </div>
   );
 };
