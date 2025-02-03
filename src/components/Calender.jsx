@@ -11,6 +11,12 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
     (_, i) => `Resource ${String.fromCharCode(65 + i)}`
   );
 
+  // Get today's date
+  const today = new Date();
+  const todayDate = today.getDate();
+  const todayMonth = today.getMonth();
+  const todayYear = today.getFullYear();
+
   useEffect(() => {
     const storedResources = JSON.parse(localStorage.getItem("resources"));
     if (storedResources) {
@@ -48,14 +54,26 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
             </th>
             {[...Array(daysInMonth)].map((_, index) => {
               const date = new Date(currentYear, currentMonth, index + 1);
+              // Check if the current date matches today's date
+              const isToday =
+                todayDate === index + 1 &&
+                todayMonth === currentMonth &&
+                todayYear === currentYear;
+
               return (
                 <th
                   key={index}
-                  className={`sticky top-0 z-10 border p-2 text-center font-normal ${
+                  className={`sticky top-0 z-10 border p-2 text-center font-normal rounded-full ${
                     theme === "dark"
                       ? "bg-black text-white border-[#333333]"
                       : "bg-white border-gray-300"
-                  }`}
+                  } ${
+                    isToday
+                      ? theme === "dark"
+                        ? "bg-[#FF9F0A]"
+                        : "bg-blue text-white"
+                      : ""
+                  }`} // Highlight today's date
                   style={{ minWidth: "150px" }}
                 >
                   {date.toLocaleDateString("en-US", {
