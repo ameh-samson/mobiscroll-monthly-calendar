@@ -6,7 +6,6 @@ const Header = ({
   setCurrentMonth,
   setCurrentYear,
 }) => {
-  const today = new Date();
   const currentMonthName = new Date(currentYear, currentMonth).toLocaleString(
     "default",
     {
@@ -34,10 +33,6 @@ const Header = ({
     }
   };
 
-  // Check if today is in the selected month
-  const isToday =
-    today.getMonth() === currentMonth && today.getFullYear() === currentYear;
-
   return (
     <header className="flex justify-between items-center p-4">
       {/* Month and year */}
@@ -51,9 +46,7 @@ const Header = ({
           <PiLessThanBold />
         </span>
 
-        <span>
-          {isToday ? "Today" : `Viewing: ${currentMonthName}, ${currentYear}`}
-        </span>
+        <span>Today</span>
 
         <span className="cursor-pointer" onClick={goToNextMonth}>
           <PiGreaterThanBold />
