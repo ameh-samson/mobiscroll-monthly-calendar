@@ -31,7 +31,11 @@ const Header = ({
   };
 
   return (
-    <header className="relative flex justify-between items-center p-4">
+    <header
+      className={`relative flex justify-between items-center p-4 border-b  ${
+        theme === "dark" ? "border-[#333333]" : "border-b-gray-300"
+      }`}
+    >
       {/* Date Picker Component */}
       <DatePicker
         currentMonth={currentMonth}
