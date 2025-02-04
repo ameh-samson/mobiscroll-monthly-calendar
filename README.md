@@ -26,25 +26,25 @@ node -v
 
 ### Follow the steps below to run this project locally:
 
-- 1. Clone the repository:
+- Clone the repository:
 
 ```
 git clone https://github.com/ameh-samson/mobiscroll-monthly-calendar.git
 ```
 
-- 2. Navigate to the project folder:
+- Navigate to the project folder:
 
 ```
 cd mobiscroll-monthly-calendar
 ```
 
-- 3. Install the dependencies:
+- Install the dependencies:
 
-```js
+```
 npm install
 ```
 
-- 4. Run the app locally
+- Run the app locally
 
 ```
 npm run dev
@@ -52,11 +52,11 @@ npm run dev
 
 ## Hosting
 
-The project is hosted on [mobiscroll-monthly-calendar(https://mobiscroll-monthly-calendar.vercel.app/)]
+The project is hosted on [[mobiscroll-monthly-calendar](https://mobiscroll-monthly-calendar.vercel.app/)]
 
 ## GitHub Repository
 
-The project code is available on: [GitHub(https://github.com/ameh-samson/mobiscroll-monthly-calendar)]
+The project code is available on: [[GitHub](https://github.com/ameh-samson/mobiscroll-monthly-calendar)]
 
 ## Questions
 
