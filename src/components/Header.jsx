@@ -10,25 +10,27 @@ const Header = ({
 }) => {
   // Navigate months
   const goToPreviousMonth = () => {
-    if (currentMonth === 0) {
-      setCurrentYear(currentYear - 1);
-      setCurrentMonth(11);
-    } else {
-      setCurrentMonth(currentMonth - 1);
-    }
+    setCurrentMonth((prevMonth) => {
+      const newMonth = prevMonth === 0 ? 11 : prevMonth - 1;
+      if (newMonth === 11) {
+        setCurrentYear(currentYear - 1);
+      }
+      return newMonth;
+    });
   };
 
   const goToNextMonth = () => {
-    if (currentMonth === 11) {
-      setCurrentYear(currentYear + 1);
-      setCurrentMonth(0);
-    } else {
-      setCurrentMonth(currentMonth + 1);
-    }
+    setCurrentMonth((prevMonth) => {
+      const newMonth = prevMonth === 11 ? 0 : prevMonth + 1;
+      if (newMonth === 0) {
+        setCurrentYear(currentYear + 1);
+      }
+      return newMonth;
+    });
   };
 
   return (
-    <header className="relative flex justify-between items-center p-4 bg-white">
+    <header className="relative flex justify-between items-center p-4">
       {/* Date Picker Component */}
       <DatePicker
         currentMonth={currentMonth}

@@ -1,20 +1,8 @@
-import { useState, useRef } from "react";
+/* eslint-disable react-hooks/rules-of-hooks */
+import { useState } from "react";
 import PropTypes from "prop-types";
-
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+import { PiLessThanBold, PiGreaterThanBold } from "react-icons/pi";
+import useTheme from "@/hooks/useTheme";
 
 const DatePicker = ({
   currentMonth,
@@ -23,55 +11,145 @@ const DatePicker = ({
   setCurrentYear,
 }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const datePickerRef = useRef(null);
+  const [selectedDate, setSelectedDate] = useState(new Date().getDate());
+  const [theme] = useTheme();
 
-  const toggleDatePicker = () => setShowDatePicker(!showDatePicker);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
-  const selectDate = (year, month) => {
-    setCurrentYear(year);
-    setCurrentMonth(month);
-    setShowDatePicker(false);
+  const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
+
+  const today = new Date();
+  const todayDate = today.getDate();
+  const todayMonth = today.getMonth();
+  const todayYear = today.getFullYear();
+
+  const toggleDatePicker = () => setShowDatePicker((prev) => !prev);
+
+  const handleDateClick = (date) => {
+    setSelectedDate(date);
+    setTimeout(() => setShowDatePicker(false), 100);
   };
 
+  const prevMonth = () => {
+    setCurrentMonth((prev) => (prev === 0 ? 11 : prev - 1));
+    if (currentMonth === 0) {
+      setCurrentYear((prev) => prev - 1);
+    }
+  };
+
+  const nextMonth = () => {
+    setCurrentMonth((prev) => (prev === 11 ? 0 : prev + 1));
+    if (currentMonth === 11) {
+      setCurrentYear((prev) => prev + 1);
+    }
+  };
+
+  const getDaysInMonth = (year, month) => {
+    if (month < 0) return new Date(year - 1, 12 + month, 0).getDate();
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
+
+  const totalDays = getDaysInMonth(currentYear, currentMonth);
+  const firstDay = getFirstDayOfMonth(currentYear, currentMonth);
+  const prevMonthDays = getDaysInMonth(currentYear, currentMonth - 1);
+
+  const days = [];
+
+  for (let i = firstDay - 1; i >= 0; i--) {
+    days.push({ day: prevMonthDays - i, currentMonth: false });
+  }
+
+  for (let i = 1; i <= totalDays; i++) {
+    days.push({ day: i, currentMonth: true });
+  }
+
+  while (days.length % 7 !== 0) {
+    days.push({
+      day: days.length - totalDays - firstDay + 1,
+      currentMonth: false,
+    });
+  }
+
   return (
-    <div className="relative z-30">
+    <div className="relative">
       <button onClick={toggleDatePicker} className="text-2xl">
         {months[currentMonth]} {currentYear}
       </button>
 
       {showDatePicker && (
         <div
-          ref={datePickerRef}
-          className="absolute top-12 left-0 bg-white shadow-lg rounded-md p-4 z-20 w-56 border"
+          className={`absolute top-12 left-0 z-30  shadow-lg rounded-md p-4 w-72 border ${
+            theme === "dark"
+              ? "bg-[#1C1C1C]"
+              : theme === "light"
+              ? "bg-white"
+              : ""
+          }`}
         >
-          {/* Year Selection */}
-          <div className="flex justify-between items-center mb-2">
-            <button onClick={() => setCurrentYear(currentYear - 1)}>
-              &lt;
-            </button>
+          <div className="flex items-center justify-between mb-2">
             <span>
               {months[currentMonth]} {currentYear}
             </span>
-            <button onClick={() => setCurrentYear(currentYear + 1)}>
-              &gt;
-            </button>
+            <div className="flex gap-2">
+              <button onClick={prevMonth}>
+                <PiLessThanBold />
+              </button>
+
+              <button onClick={nextMonth}>
+                <PiGreaterThanBold />
+              </button>
+            </div>
           </div>
 
-          {/* Month Selection */}
-          <div className="grid grid-cols-3 gap-2">
-            {months.map((month, index) => (
-              <button
-                key={index}
-                className={`p-2 text-sm rounded ${
-                  index === currentMonth
-                    ? "bg-blue-500 text-white"
-                    : "hover:bg-gray-200"
-                }`}
-                onClick={() => selectDate(currentYear, index)}
-              >
-                {month.substring(0, 3)}
-              </button>
+          <div className="grid grid-cols-7 text-center font-semibold mb-2">
+            {daysOfWeek.map((day, index) => (
+              <div key={index} className="text-gray-500">
+                {day}
+              </div>
             ))}
+          </div>
+
+          <div className="grid grid-cols-7 text-center">
+            {days.map((dateObj, index) => {
+              const isToday =
+                dateObj.day === todayDate &&
+                currentMonth === todayMonth &&
+                currentYear === todayYear;
+              return (
+                <button
+                  key={index}
+                  className={`p-2 text-sm rounded-full 
+                  ${dateObj.currentMonth ? "text-black" : "text-gray-400"} 
+                  ${isToday ? "bg-blue text-white" : ""}
+                  ${
+                    dateObj.day === selectedDate && dateObj.currentMonth
+                      ? "text-white"
+                      : "hover:bg-blue hover:text-white"
+                  }
+                  ${theme === "dark" ? "text-white" : ""} `}
+                  onClick={() =>
+                    dateObj.currentMonth && handleDateClick(dateObj.day)
+                  }
+                >
+                  {dateObj.day}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}

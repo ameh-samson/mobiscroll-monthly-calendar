@@ -65,8 +65,8 @@ const Calendar = ({ currentMonth, currentYear, theme }) => {
                   key={index}
                   className={`sticky top-0 z-10 border p-2 text-center font-normal rounded-full ${
                     theme === "dark"
-                      ? "bg-black text-white border-[#333333]"
-                      : "bg-white border-gray-300"
+                      ? "text-white border-[#333333]"
+                      : "border-gray-300"
                   } ${
                     isToday
                       ? theme === "dark"
