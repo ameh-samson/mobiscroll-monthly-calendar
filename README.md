@@ -52,11 +52,11 @@ npm run dev
 
 ## Hosting
 
-The project is hosted on [[mobiscroll-monthly-calendar](https://mobiscroll-monthly-calendar.vercel.app/)]
+The project is hosted on [mobiscroll-monthly-calendar(https://mobiscroll-monthly-calendar.vercel.app/)]
 
 ## GitHub Repository
 
-The project code is available on: [[GitHub](https://github.com/ameh-samson/mobiscroll-monthly-calendar)]
+The project code is available on: [GitHub(https://github.com/ameh-samson/mobiscroll-monthly-calendar)]
 
 ## Questions
 
