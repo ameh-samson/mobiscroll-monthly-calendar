@@ -7,6 +7,7 @@ const Header = ({
   currentYear,
   setCurrentMonth,
   setCurrentYear,
+  theme,
 }) => {
   // Navigate months
   const goToPreviousMonth = () => {
@@ -37,6 +38,7 @@ const Header = ({
         currentYear={currentYear}
         setCurrentMonth={setCurrentMonth}
         setCurrentYear={setCurrentYear}
+        theme={theme}
       />
 
       {/* Navigation */}
@@ -58,6 +60,7 @@ Header.propTypes = {
   currentYear: PropTypes.number.isRequired,
   setCurrentMonth: PropTypes.func.isRequired,
   setCurrentYear: PropTypes.func.isRequired,
+  theme: PropTypes.string.isRequired,
 };
 
 export default Header;

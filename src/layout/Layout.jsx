@@ -27,6 +27,7 @@ const Layout = () => {
           currentYear={currentYear}
           setCurrentMonth={setCurrentMonth}
           setCurrentYear={setCurrentYear}
+          theme={theme}
         />
       </div>
 

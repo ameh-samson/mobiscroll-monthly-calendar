@@ -2,17 +2,16 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { PiLessThanBold, PiGreaterThanBold } from "react-icons/pi";
-import useTheme from "@/hooks/useTheme";
 
 const DatePicker = ({
   currentMonth,
   currentYear,
   setCurrentMonth,
   setCurrentYear,
+  theme,
 }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date().getDate());
-  const [theme] = useTheme();
 
   const months = [
     "January",
@@ -93,7 +92,7 @@ const DatePicker = ({
 
       {showDatePicker && (
         <div
-          className={`absolute top-12 left-0 z-30  shadow-lg rounded-md p-4 w-72 border ${
+          className={`absolute top-12 left-0 z-30  shadow-lg rounded-md p-4 w-72 ${
             theme === "dark"
               ? "bg-[#1C1C1C]"
               : theme === "light"
@@ -135,7 +134,13 @@ const DatePicker = ({
                   key={index}
                   className={`p-2 text-sm rounded-full 
                   ${dateObj.currentMonth ? "text-black" : "text-gray-400"} 
-                  ${isToday ? "bg-blue text-white" : ""}
+                  ${
+                    isToday
+                      ? theme === "dark"
+                        ? "bg-[#FF9F0A] text-white"
+                        : "bg-blue text-white"
+                      : ""
+                  }
                   ${
                     dateObj.day === selectedDate && dateObj.currentMonth
                       ? "text-white"
@@ -162,6 +167,7 @@ DatePicker.propTypes = {
   currentYear: PropTypes.number.isRequired,
   setCurrentMonth: PropTypes.func.isRequired,
   setCurrentYear: PropTypes.func.isRequired,
+  theme: PropTypes.string.isRequired,
 };
 
 export default DatePicker;
